@@ -8,12 +8,11 @@ addons:
       - docker-ce
 
 env:
-  - CONTAINER="proxy"
-  - BASE="alpine"
-  - BASE="ubuntu"
-  - VERSION="1.0.0"
-  - LATEST_VERSION="1.0.0"
-  - LATEST_BASE="alpine"
+  - CONTAINER=proxy, BASE=alpine
+  - BASE=ubuntu
+  - VERSION=1.0.0
+  - LATEST_VERSION=1.0.0
+  - LATEST_BASE=alpine
 
 install:
   - git clone --recurse-submodules https://github.com/8ear/MISP-dockerized-documentation.git ~/misp-docs
