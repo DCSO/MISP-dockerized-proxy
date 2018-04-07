@@ -23,12 +23,12 @@ install:
   - git clone --recurse-submodules https://github.com/8ear/MISP-dockerized-documentation.git ~/misp-docs
 
 script:
-  - travis_retry ./build.sh $(VERSION)-$(BASE)
+  - travis_retry ./build.sh ${VERSION}-${BASE}
   - ~/misp-docs/official-images/test/run.sh "dcso/misp-${CONTAINER}:$VERSION-${BASE}"
 
 
 after_sucess:
-  - docker tag dcso/misp-${CONTAINER}:$(VERSION)-$(BASE)
+  - docker tag dcso/misp-${CONTAINER}:${VERSION}-${BASE}
   - docker tag dcso/misp-${CONTAINER}:${LATEST_VERSION}-${LATEST_BASE} dcso/misp-${CONTAINER}:latest
 
 before_deploy:
