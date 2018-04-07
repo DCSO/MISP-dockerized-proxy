@@ -82,4 +82,5 @@ ENV VERSION=${VERSION}
 HEALTHCHECK --interval=2m --timeout=15s --retries=3 CMD curl -f http://localhost/ || exit 1
 
 # Install core components
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["nginx"]
+CMD ["nginx", "-g", "daemon off;"]
