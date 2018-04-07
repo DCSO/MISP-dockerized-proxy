@@ -27,12 +27,14 @@ script:
 - travis_retry ./build.sh ${VERSION}-${BASE}
 - ~/misp-docs/official-images/test/run.sh "dcso/misp-${CONTAINER}:$VERSION-${BASE}"
 after_sucess:
-  if: branch = master
   - docker tag dcso/misp-${CONTAINER}:${VERSION}-${BASE}
+    if: branch = master
   - docker tag dcso/misp-${CONTAINER}:${LATEST_VERSION}-${LATEST_BASE} dcso/misp-${CONTAINER}:latest
-  if: branch = develop
+    if: branch = master
   - docker tag dcso/misp-${CONTAINER}:${VERSION}-${BASE}-develop
+    if: branch = develop
   - docker tag dcso/misp-${CONTAINER}:${LATEST_VERSION}-${LATEST_BASE} dcso/misp-${CONTAINER}:latest-develop
+    if: branch = develop
 before_deploy:
 - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 deploy:
