@@ -27,7 +27,7 @@ after_sucess:
 - docker tag dcso/misp-${CONTAINER}:${VERSION}-${BASE}
 - docker tag dcso/misp-${CONTAINER}:${LATEST_VERSION}-${LATEST_BASE} dcso/misp-${CONTAINER}:latest
 before_deploy:
-- docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 deploy:
   provider: script
   script: docker push dcso/misp-${CONTAINER}-private:${VERSION}-${BASE} docker push
