@@ -37,8 +37,8 @@ before_deploy:
 deploy:
   provider: script
   script: 
-    docker push dcso/misp-${CONTAINER}:$(VERSION)-$(BASE)
-    docker push dcso/misp-${CONTAINER}:latest
+    docker push dcso/misp-${CONTAINER}-private:${VERSION}-${BASE}
+    docker push dcso/misp-${CONTAINER}-private:latest
   on:
     branch: develop
 
