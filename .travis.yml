@@ -41,8 +41,8 @@ before_deploy:
 deploy:
   provider: script
   script:
-  - docker push dcso/misp-${CONTAINER}-private:${VERSION}-${BASE} 
-  - docker push dcso/misp-${CONTAINER}-private:${VERSION}-${LATEST_BASE} 
-  - docker push dcso/misp-${CONTAINER}-private:latest
+    docker push dcso/misp-${CONTAINER}-private:${VERSION}-${BASE} ;
+    [ $LATEST_BASE == $BASE ] && docker push dcso/misp-${CONTAINER}-private:${VERSION}-${LATEST_BASE} ;
+    [ $LATEST_VERSION == $VERSION ] && [ $LATEST_BASE == $BASE ] && docker push dcso/misp-${CONTAINER}-private:latest
   on:
     branch: develop
