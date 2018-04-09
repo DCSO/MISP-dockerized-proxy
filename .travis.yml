@@ -23,10 +23,11 @@ after_success:
 # check if branch=master and the current build is no pull request, then push it to docker hub
 - test ("$TRAVIS_BRANCH" == "develop") && test ("$TRAVIS_PULL_REQUEST" == "false") && make push-image LOCATION=private; fi
 # check if branch=develop and the current build is no pull request, then push it to docker hub
-- if [[ "$TRAVIS_BRANCH" == "develop" & "$TRAVIS_PULL_REQUEST" == "false" ]]; then make push-image LOCATION=private; fi
-# test
-- if [[ "$TRAVIS_BRANCH" == "develop" ]]; then \
-  if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then make push-image LOCATION=private; fi; fi
+- if [[ "$TRAVIS_BRANCH" == "develop" ]]; then 
+    if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then 
+      make push-image LOCATION=private; 
+    fi; 
+  fi
 
 # don't notify me when things fail
 notifications:
