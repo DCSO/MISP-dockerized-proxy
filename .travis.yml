@@ -18,7 +18,7 @@ script:
 - travis_retry make build-travis v=${VERSION} b=${BASE}
 - travis_retry make tags-travis v=${VERSION} b=${BASE}
 
-after_success:
+after_script:
 - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 # check if branch=master and the current build is no pull request, then push it to docker hub
 - if [[ "$TRAVIS_BRANCH" == "master" ]]; then 
