@@ -26,9 +26,9 @@ main() {
 # latest docker version which allows us to perform
 # image squashing as well as multi-stage builds.
 setup_dependencies() {
-  echo "INFO:
-  Setting up dependencies.
-  "
+  echo "#########################################################"
+  echo "INFO:  Setting up dependencies."
+  echo "#########################################################"
 
   sudo apt update -y
   sudo apt install realpath python python-pip -y
@@ -50,9 +50,9 @@ setup_dependencies() {
 # squashing) as well as have a bigger amount of
 # concurrent downloads and uploads.
 update_docker_configuration() {
-  echo "INFO:
-  Updating docker configuration
-  "
+  echo "#########################################################"
+  echo "INFO:  Updating docker configuration"
+  echo "#########################################################"
 
   echo '{
   "experimental": true,
