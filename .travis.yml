@@ -20,8 +20,8 @@ script:
 
 after_success:
 - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-- [[ "$TRAVIS_BRANCH" == "master" ]] &&  make push-image LOCATION=public;
-- [[ "$TRAVIS_BRANCH" == "develop" ]] && make push-image LOCATION=private;
+- if [[ "$TRAVIS_BRANCH" == "master" ]]; then  make push-image LOCATION=public; fi
+- if [[ "$TRAVIS_BRANCH" == "develop" ]]; then make push-image LOCATION=private; fi
 
 # don't notify me when things fail
 notifications:
