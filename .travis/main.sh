@@ -11,10 +11,9 @@ set -o errexit
 main() {
   setup_dependencies
   update_docker_configuration
-
-  echo "SUCCESS:
-  Done! Finished setting up Travis machine.
-  "
+  echo "#########################################################"
+  echo "SUCCESS:  Done! Finished setting up Travis machine.  "
+  echo "#########################################################"
 }
 
 # Prepare the dependencies that the machine need.
