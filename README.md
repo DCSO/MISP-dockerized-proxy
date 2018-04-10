@@ -25,16 +25,12 @@ tbd
   <td><a href="https://badge.fury.io/gh/DCSO%2FMISP-dockerized-proxy"><img src="https://badge.fury.io/gh/DCSO%2FMISP-dockerized-proxy.svg" alt="GitHub version" height="18"></a></td>
 </tr>
 <tr>
-  <td>Travis</td>
-  <td><a href="https://travis-ci.org/DCSO/MISP-dockerized-proxy"><img src="https://img.shields.io/travis/DCSO/MISP-dockerized-proxy/2.4.svg" /></a></td>
+  <td>Travis Master</td>
+  <td><a href="https://travis-ci.org/DCSO/MISP-dockerized-robot"><img src="https://travis-ci.org/DCSO/MISP-dockerized-proxy.svg?branch=master" /></a></td>
 </tr>
 <tr>
-  <td>Contributors</td>
-  <td><img src="https://img.shields.io/github/contributors/DCSO/MISP-dockerized-proxy.svg" /></td>
-</tr>
-<tr>
-  <td>Project License</td>
-  <td><img src="https://img.shields.io/github/license/DCSO/MISP-dockerized-proxy.svg" /></td>
+  <td>Travis Develop</td>
+  <td><a href="https://travis-ci.org/DCSO/MISP-dockerized-robot"><img src="https://travis-ci.org/DCSO/MISP-dockerized-proxy.svg?branch=develop" /></a></td>
 </tr>
 <tr>
   <td>Docker Container License</td>
@@ -66,7 +62,7 @@ For the Usage please read the [MISP-dockerized](https://github.com/DCSO/MISP-doc
 
 
 ## Documentation
-The [dockerfile](https://github.com/DCSO/MISP-dockerized-proxy/) you can find at Github too.
+You can also find the [docker file](https://github.com/DCSO/MISP-dockerized-proxy/) at Github.
 
 
 # License
