@@ -1,5 +1,7 @@
 # Supported Tags
-tbd
+
+- [`1.0.0`,`1.0.0-alpine`,`latest`](https://github.com/DCSO/MISP-dockerized-proxy/blob/master/1.0.0-alpine/Dockerfile)
+- [`1.0.0-ubuntu`](https://github.com/DCSO/MISP-dockerized-proxy/blob/master/1.0.0-ubuntu/Dockerfile)
 
 # Quick reference
 
