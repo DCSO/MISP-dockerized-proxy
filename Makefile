@@ -2,10 +2,10 @@
 #	Makefile for proxy
 #
 CONTAINER := proxy
-LATEST_VERSION := 1.0.0
+LATEST_VERSION := 1.0.1
 LATEST_BASE := alpine
 BASE := alpine ubuntu
-VERSION :=1.0.0
+VERSION :=1.0.0 1.0.1
 
 CMDSEP = &
 PUBLIC_REPO := dcso/misp-$(CONTAINER)

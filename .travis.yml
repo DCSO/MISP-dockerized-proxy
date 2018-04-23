@@ -9,6 +9,7 @@ env:
   - secure: "nm87Bg2uXKInK43lGoCjDKO/SiUtIGu0zGGVaHEdwfFgFdgG+0IAZ3vzoozaM7jH6VD+3hoMY8C/ya/Hv6EkaAh9+Pg20jyCZDaahaO4eyJSRPOyoVSe0CzsPhXvwxiTJM7gKgS9Qc+z7GZwNii+YeHGoj50zZJwhudG6BXAVI59IzNgLtWRkkH02U5r4erP1Zm0TGxQRHE7L/C2u+pe6+j75aoTqwiDfxRJyjOdulpVmZD6RxzZv6fJqg/bRYjtFCvkVEZKPNL2GA//AGBviaTLVVp6ehZhYFinywq7gsZ6zT2eUSfrmg/zWOCXg+fd//hlxReVu25OMHEa5VqxiwF+SPk/Am1LPiC1lrQJEvqMdKi75Ql3vnUVb/MBE44roOd3IbTSEkrt7tiRegBiOQgp1gTvku1zkPXoaCt/N8Q297ZwLEJupZwpvCcDx4jasxuPQAxnoYZau7fpCG6ocDS6lnYO6H/WbR7UTdsf5qV/gDwIqMZjaF9F7l5RXfLOpv5230z4oUKpTVp9aeruA7Q66UOx7Cy7Rbkpa8SxNzCxhPRjkvDTMhxzYZZFpOynFkIaYRLmJTfwIQ+lakKdmLVatSBTTGe5H6yu3fPQOOHAteqaJHY08wwXG6hgAUx54LiqhCyyeIEjLx7xpyjTnz9BXjfBG1tkJUuC611TiQM=" 
   matrix:
   - VERSION=1.0.0 BASE=alpine
+  - VERSION=1.0.1 BASE=alpine
   - VERSION=1.0.0 BASE=ubuntu
   
 before_install:
