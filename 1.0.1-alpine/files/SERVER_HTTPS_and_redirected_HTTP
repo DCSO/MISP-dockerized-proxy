@@ -3,10 +3,6 @@ server {
 	listen 80;
 	include conf.d/vars_common;
 
-	# Logfiles
-	#access_log      /var/log/nginx/misp-server/access.80.log;
-	#error_log       /var/log/nginx/misp-server/error.80.log;
-
 	# redirect to HTTPS
 	return 301 https://$host$request_uri;
 
@@ -21,10 +17,6 @@ server {
 	# SSL Certificate and Key
 	ssl_certificate /etc/nginx/ssl/cert.pem;
 	ssl_certificate_key /etc/nginx/ssl/key.pem;
-
-	# Logfiles
-	#access_log      /var/log/nginx/misp-server/access.443.log;
-	#error_log       /var/log/nginx/misp-server/error.443.log;
 
 	location / {
 		include conf.d/vars_proxy;
