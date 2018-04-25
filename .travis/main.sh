@@ -38,7 +38,7 @@ setup_dependencies() {
   #docker info
   #docker-compose --version
   
-  #git config --global user.name "MISP-dockerized-bot"
+  git config --global user.name "MISP-dockerized-bot"
   
   #git clone --recurse-submodules https://github.com/8ear/MISP-dockerized-documentation.git ~/misp-docs
 
