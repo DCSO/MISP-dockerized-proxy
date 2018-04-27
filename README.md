@@ -1,7 +1,12 @@
-# Supported Tags
+# Supported tags and respective `Dockerfile` links
 
-- [`1.0.0`,`1.0.0-alpine`,`latest`](https://github.com/DCSO/MISP-dockerized-proxy/1.0.0-alpine/Dockerfile)
-- [`1.0.0-ubuntu`](https://github.com/DCSO/MISP-dockerized-proxy/1.0.0-ubuntu/Dockerfile)
+- [`1.0.1-alpine`, `1.0.1`, `latest`][3]
+- [`1.0.0-alpine`, `1.0.1`][2]
+- [`1.0.0-ubuntu`][1]
+
+[1]: https://github.com/DCSO/MISP-dockerized-proxy/blob/master/1.0.0-ubuntu/Dockerfile
+[2]: https://github.com/DCSO/MISP-dockerized-proxy/blob/master/1.0.0-alpine/Dockerfile
+[3]: https://github.com/DCSO/MISP-dockerized-proxy/blob/master/1.0.1-alpine/Dockerfile
 
 # Quick reference
 
@@ -9,12 +14,12 @@
 	[https://github.com/DCSO/MISP-dockerized-proxy/issues](https://github.com/DCSO/MISP-dockerized-proxy/issues)
 
 -	**Maintained by**:  
-	[DCSO](https://github.com/DCSO/MISP-dockerized-proxy)
+	[DCSO](https://github.com/DCSO)
 
 -	**Supported Docker versions**:  
 	[the latest release](https://github.com/docker/docker-ce/releases/latest)
 
-# Wht is MISP dockerized?
+# What is MISP dockerized?
 
 **MISP dockerized** is a project designed to provide an easy-to-use and easy-to-install'out of the box' MISP instance that includes everything you need to run MISP with minimal host-side requirements. 
 
@@ -24,13 +29,19 @@
 
 | | |
 |-|-|
-| Latest Release | [![GitHub version](https://badge.fury.io/gh/dcso%2FMISP-dockerized-proxy.svg)](https://badge.fury.io/gh/dcso%2FMISP-dockerized-proxy) |
-| Travis Master | [![Build Status](https://travis-ci.org/DCSO/MISP-dockerized-proxy.svg?branch=master)](https://travis-ci.org/DCSO/MISP-dockerized-proxy) |
-| Travis Develop | [![Build Status](https://travis-ci.org/DCSO/MISP-dockerized-proxy.svg?branch=develop)](https://travis-ci.org/DCSO/MISP-dockerized-proxy) |
-| Docker Container License | [![](https://images.microbadger.com/badges/license/dcso/misp-proxy.svg)](https://microbadger.com/images/dcso/misp-proxy) |
-| Docker Size & Layers | [![](https://images.microbadger.com/badges/image/dcso/misp-proxy.svg)](https://microbadger.com/images/dcso/misp-proxy)|
-| Latest Docker Version | [![](https://images.microbadger.com/badges/version/dcso/misp-proxy.svg)](https://microbadger.com/images/dcso/misp-proxy)|
-| Commit for Latest Docker Version | [![](https://images.microbadger.com/badges/commit/dcso/misp-proxy.svg)](https://microbadger.com/images/dcso/misp-proxy)|
+| Travis Master | [![Build Status][1]][2] |
+| Docker Size & Layers | [![][4]][7]|
+| Latest Docker Version | [![][5]][7]|
+| Commit for Latest Docker Version | [![][6]][7]|
+
+[1]: https://travis-ci.org/DCSO/MISP-dockerized-proxy.svg?branch=master
+[2]: https://travis-ci.org/DCSO/MISP-dockerized-proxy
+[3]: https://images.microbadger.com/badges/license/dcso/misp-proxy.svg
+[4]: https://images.microbadger.com/badges/image/dcso/misp-proxy.svg
+[5]: https://images.microbadger.com/badges/version/dcso/misp-proxy.svg
+[6]: https://images.microbadger.com/badges/commit/dcso/misp-proxy.svg
+[7]: https://microbadger.com/images/dcso/misp-proxy
+
 
 
 # How to use this image
