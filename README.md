@@ -29,18 +29,17 @@
 
 | | |
 |-|-|
-| Travis Master | [![Build Status][1]][2] |
-| Docker Size & Layers | [![][4]][7]|
-| Latest Docker Version | [![][5]][7]|
-| Commit for Latest Docker Version | [![][6]][7]|
+| Travis Master | [![][101]][102] |
+| Docker Size & Layers | [![][104]][107]|
+| Latest Docker Version | [![][105]][107]|
+| Commit for Latest Docker Version | [![][106]][107]|
 
-[1]: https://travis-ci.org/DCSO/MISP-dockerized-proxy.svg?branch=master
-[2]: https://travis-ci.org/DCSO/MISP-dockerized-proxy
-[3]: https://images.microbadger.com/badges/license/dcso/misp-proxy.svg
-[4]: https://images.microbadger.com/badges/image/dcso/misp-proxy.svg
-[5]: https://images.microbadger.com/badges/version/dcso/misp-proxy.svg
-[6]: https://images.microbadger.com/badges/commit/dcso/misp-proxy.svg
-[7]: https://microbadger.com/images/dcso/misp-proxy
+[101]: https://travis-ci.org/DCSO/MISP-dockerized-proxy.svg?branch=master
+[102]: https://travis-ci.org/DCSO/MISP-dockerized-proxy
+[104]: https://images.microbadger.com/badges/image/dcso/misp-proxy.svg
+[105]: https://images.microbadger.com/badges/version/dcso/misp-proxy.svg
+[106]: https://images.microbadger.com/badges/commit/dcso/misp-proxy.svg
+[107]: https://microbadger.com/images/dcso/misp-proxy
 
 
 
