@@ -40,6 +40,7 @@ RUN mv /etc/nginx/nginx.conf /etc/nginx/nginx.orig \
 
 # Environment Variable for Proxy
 ENV HTTP_PROXY=""
+ENV HTTPS_PROXY=""
 ENV NO_PROXY="0.0.0.0"
 # Environment Variable to check Version
 ENV VERSION=${VERSION}

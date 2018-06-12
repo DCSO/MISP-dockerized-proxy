@@ -74,6 +74,7 @@ RUN chmod -R 640 /etc/ssl/private
 
 # Environment Variable for Proxy
 ENV HTTP_PROXY=""
+ENV HTTPS_PROXY=""
 ENV NO_PROXY="0.0.0.0"
 # Environment Variable to check Version
 ENV VERSION=${VERSION}
