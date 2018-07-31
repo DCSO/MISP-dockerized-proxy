@@ -27,6 +27,9 @@ LABEL org.label-schema.build-date="${BUILD_DATE}" \
           org.label-schema.version="${VERSION}" \
           org.label-schema.schema-version="1.0.0-rc1"
 
+# Install Curl for Healthcheck
+RUN apk add --no-cache curl
+
 # Copy the default config
 COPY files/GLOBAL* files/SERVER* files/vars* /etc/nginx/conf.d/
 # Add directory for maintenance File
