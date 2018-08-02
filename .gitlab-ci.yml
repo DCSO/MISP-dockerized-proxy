@@ -22,16 +22,29 @@ before_script:
 #- make install
 
 
-build_container:
+build_1.0.0-ubuntu:
   stage: build
   script:
-  - make build
+  - make build v=1.0.0-ubuntu
   - make tags
-  #- docker build --pull -t $CONTAINER_TEST_IMAGE .
-  #- docker push $CONTAINER_TEST_IMAGE
+  - make push
+
+build_1.0.0-alpine:
+  stage: build
+  script:
+  - make build v=1.0.1-alpine
+  - make tags
+  - make push
+
+build_1.0.1-alpine:
+  stage: build
+  script:
+  - make build v=1.0.2-alpine
+  - make tags
+  - make push
 
 
-upload_image_internal_registry:
+.upload_image_internal_registry:
   stage: deploy
   only: 
   - master
