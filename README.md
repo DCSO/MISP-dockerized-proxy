@@ -36,10 +36,10 @@
 
 [101]: https://travis-ci.org/DCSO/MISP-dockerized-proxy.svg?branch=master
 [102]: https://travis-ci.org/DCSO/MISP-dockerized-proxy
-[104]: https://images.microbadger.com/badges/image/dcso/misp-proxy.svg
-[105]: https://images.microbadger.com/badges/version/dcso/misp-proxy.svg
-[106]: https://images.microbadger.com/badges/commit/dcso/misp-proxy.svg
-[107]: https://microbadger.com/images/dcso/misp-proxy
+[104]: https://images.microbadger.com/badges/image/dcso/misp-dockerized-proxy.svg
+[105]: https://images.microbadger.com/badges/version/dcso/misp-dockerized-proxy.svg
+[106]: https://images.microbadger.com/badges/commit/dcso/misp-dockerized-proxy.svg
+[107]: https://microbadger.com/images/dcso/misp-dockerized-proxy
 
 
 # How to use this image
