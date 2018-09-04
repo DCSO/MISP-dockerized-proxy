@@ -43,8 +43,6 @@ before_script:
 
 build_1.0.1-alpine:
   stage: build
-  only: 
-  - master
   script:
   - make build v=1.0.1-alpine
   - make tags
@@ -52,8 +50,6 @@ build_1.0.1-alpine:
 
 build_1.0.2-alpine:
   stage: build
-  only: 
-  - master
   script:
   - make build v=1.0.2-alpine
   - make tags
