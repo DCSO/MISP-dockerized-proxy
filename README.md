@@ -1,12 +1,14 @@
 # Supported tags and respective `Dockerfile` links
 
-- [`1.0.1-alpine`, `latest`][3]
+- [`1.0.2-alpine`, `latest`][4]
+- [`1.0.1-alpine`][3]
 - [`1.0.0-alpine`][2]
 - [`1.0.0-ubuntu`][1]
 
 [1]: https://github.com/DCSO/MISP-dockerized-proxy/blob/master/1.0.0-ubuntu/Dockerfile
 [2]: https://github.com/DCSO/MISP-dockerized-proxy/blob/master/1.0.0-alpine/Dockerfile
 [3]: https://github.com/DCSO/MISP-dockerized-proxy/blob/master/1.0.1-alpine/Dockerfile
+[4]: https://github.com/DCSO/MISP-dockerized-proxy/blob/master/1.0.2-alpine/Dockerfile
 
 # Quick reference
 
@@ -36,10 +38,10 @@
 
 [101]: https://travis-ci.org/DCSO/MISP-dockerized-proxy.svg?branch=master
 [102]: https://travis-ci.org/DCSO/MISP-dockerized-proxy
-[104]: https://images.microbadger.com/badges/image/dcso/misp-proxy.svg
-[105]: https://images.microbadger.com/badges/version/dcso/misp-proxy.svg
-[106]: https://images.microbadger.com/badges/commit/dcso/misp-proxy.svg
-[107]: https://microbadger.com/images/dcso/misp-proxy
+[104]: https://images.microbadger.com/badges/image/dcso/misp-dockerized-proxy.svg
+[105]: https://images.microbadger.com/badges/version/dcso/misp-dockerized-proxy.svg
+[106]: https://images.microbadger.com/badges/commit/dcso/misp-dockerized-proxy.svg
+[107]: https://microbadger.com/images/dcso/misp-dockerized-proxy
 
 
 # How to use this image
