@@ -1,12 +1,14 @@
 # Supported tags and respective `Dockerfile` links
 
-- [`1.0.1-alpine`, `latest`][3]
+- [`1.0.2-alpine`, `latest`][4]
+- [`1.0.1-alpine`][3]
 - [`1.0.0-alpine`][2]
 - [`1.0.0-ubuntu`][1]
 
 [1]: https://github.com/DCSO/MISP-dockerized-proxy/blob/master/1.0.0-ubuntu/Dockerfile
 [2]: https://github.com/DCSO/MISP-dockerized-proxy/blob/master/1.0.0-alpine/Dockerfile
 [3]: https://github.com/DCSO/MISP-dockerized-proxy/blob/master/1.0.1-alpine/Dockerfile
+[4]: https://github.com/DCSO/MISP-dockerized-proxy/blob/master/1.0.2-alpine/Dockerfile
 
 # Quick reference
 
