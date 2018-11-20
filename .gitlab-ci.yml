@@ -33,6 +33,7 @@ before_script:
   - make push
 
 include:
+  - '.legacy/.gitlab-ci.yml'
   - '1.0-alpine/.gitlab-ci.yml'
   - '1.1-alpine/.gitlab-ci.yml'
   - '1.2-alpine/.gitlab-ci.yml'
