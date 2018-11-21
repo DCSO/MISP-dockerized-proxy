@@ -1,6 +1,6 @@
 #!/bin/bash
 # Set an option to exit immediately if any error appears
-set -xe
+set -xv
 
 echo  "### Show Images before Tagging:"
 docker images
@@ -29,36 +29,45 @@ unset IFS
 # Latest Version
 LATEST=$(echo ${sorted[$index-1]}|cut -d- -f 1)
 
+# All Latest Major Versions
+MAJOR_LATEST
+# Run over all FOLDER versions and add all first digit numbers
+for i in ${sorted[@]}
+do
+    # change from 1.0-ubuntu -> 1
+    CURRENT_MAJOR_VERSION="$(echo $i|cut -d . -f 1)"
+    CURRENT_MINOR_VERSION="$(echo $i|cut -d . -f 2|cut -d - -f 1)"
+
+    # Check if there is any Version available for the current MAJOR version:
+    [ -z ${MAJOR_LATEST[$CURRENT_MAJOR_LATEST]} ] && MAJOR_LATEST[$CURRENT_MAJOR_VERSION]=$i && continue
+
+    # change the Folder Name which are written into the Array on position of the current_major_version from 1.0-ubuntu to 1
+    LIST_MINOR_VERSION=$(echo ${MAJOR_LATEST[$CURRENT_MAJOR_VERSION]}|cut -d . -f 2|cut -d - -f 1)
+    # Check if the current minor digit from Elelement i is higher than the one which are saved in the array
+    [[ $LIST_MINOR_VERSION < $CURRENT_MINOR_VERSION ]] && MAJOR_LATEST[$CURRENT_MAJOR_VERSION]=$i && continue
+done
+
+
 # Lookup to all build versions of the current docker container
 ALL_BUILD_DOCKER_VERSIONS=$(docker images --format '{{.Repository}}={{.Tag}}'|grep $DOCKER_REPO|cut -d = -f 2)
-
-
 
 # Tag Latest + Version Number
 for i in $ALL_BUILD_DOCKER_VERSIONS
 do
-    VERSION=$(echo $i|cut -d- -f 1)
-    BASE=$(echo $i|cut -d- -f 2)
-    # Check image base
-    if [ $BASE == "alpine" ] ;then
-        # 1st alpine as latest
-        [ $VERSION == $LATEST ] && docker tag $DOCKER_REPO:$i $DOCKER_REPO:latest-dev
-    else 
-        if [ $BASE == "debian" -a ! -d "$VERSION-alpine" ] ;then
-        # 2nd debian as latest
-        [ $VERSION == $LATEST ] && docker tag $DOCKER_REPO:$i $DOCKER_REPO:latest-dev
+    VERSION=$(echo $i|cut -d- -f 1)                 # for example 1.0
+    BASE=$(echo $i|cut -d- -f 2)                    # for example ubuntu
+    MAJOR_VERSION="$(echo $i|cut -d . -f 1)"        # for example 1
+
+    # Add latest Tag
+    [ $VERSION == $LATEST ] && docker tag $DOCKER_REPO:$i $DOCKER_REPO:latest-dev
     
-        else 
-            if [ $BASE == "ubuntu" -a ! -d "$VERSION-alpine" -a ! -d "$VERSION-debian" ] ;then
-            # 3rd ubuntu as latest
-            [ $VERSION == $LATEST ] && docker tag $DOCKER_REPO:$i $DOCKER_REPO:latest-dev
-            
-            else 
-                # 4th all other
-                [ $VERSION == $LATEST ] && docker tag $DOCKER_REPO:$i $DOCKER_REPO:latest-dev
-            fi
-        fi
-    fi
+    # Add latest Major Version Tag
+    for k in ${MAJOR_LATEST[@]}
+    do
+        CURRENT_MAJOR_VERSION="$(echo $k|cut -d . -f 1)"
+        [ $i == $k"-dev" ] && docker tag $DOCKER_REPO:$i $DOCKER_REPO:$CURRENT_MAJOR_VERSION-dev
+    done
+
 done
 
 echo  "### Show Images after Tagging:"
