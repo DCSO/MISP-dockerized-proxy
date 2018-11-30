@@ -8,6 +8,7 @@ ARG BUILD_DATE
 ARG GIT_REPO
 ARG VCS_REF
 ARG VERSION
+ARG RELEASE_DATE
 ARG NAME="MISP-dockerized-${COMPONENT}"
 ARG DESCRIPTION="This docker container is part of the DCSO MISP dockerized environment."
 ARG DOCUMENTATION="https://github.com/DCSO/MISP-dockerized"
@@ -50,10 +51,7 @@ RUN apk add --no-cache \
 COPY files/nginx/conf.d/* /etc/nginx/conf.d/
 # COPY Entrypoint script
 COPY files/entrypoint_nginx.sh /
-
-# Add directory for maintenance File + Copy Maintenance config
-RUN mkdir -p /var/www/maintenance; \
-    mv /etc/nginx/conf.d/maintenance.html /var/www/maintenance/index.html
+RUN chmod +x /entrypoint_nginx.sh
 
 # rename orig nginx.conf && place own nginx.conf
 RUN mv /etc/nginx/nginx.conf /etc/nginx/nginx.orig \
