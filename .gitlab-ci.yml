@@ -4,8 +4,8 @@ services:
   - docker:dind
 
 stages:
+- test
 - build
-- deploy
 
 variables:
   #CONTAINER_TEST_IMAGE: my-docker-hub/$CI_PROJECT_ID:$CI_BUILD_REF_NAME_test
@@ -23,6 +23,13 @@ before_script:
 - docker login -u "$INTERNAL_REGISTRY_USER" -p "$INTERNAL_REGISTRY_PW" "$INTERNAL_REGISTRY_HOST"
 #- make install
 
+.test:
+  stage: test
+  except: 
+  - master  
+  script:
+  - make build v=$VERSION
+
 .build:
   stage: build
   only: 
@@ -37,6 +44,7 @@ include:
   - '1.0-alpine/.gitlab-ci.yml'
   - '1.1-alpine/.gitlab-ci.yml'
   - '1.2-alpine/.gitlab-ci.yml'
+  - '1.3-alpine/.gitlab-ci.yml'
 
 # after_success:
 # # notify Docker Hub to make a new build
