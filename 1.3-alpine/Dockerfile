@@ -71,4 +71,5 @@ ENV VERSION=${VERSION}
 # Add Healthcheck Config
 HEALTHCHECK --interval=2m --timeout=15s --retries=3 CMD curl -fk https://localhost/ || exit 1
 
+
 ENTRYPOINT [ "/entrypoint_nginx.sh" ]
