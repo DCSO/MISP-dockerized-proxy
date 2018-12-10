@@ -45,6 +45,7 @@ include:
   - '1.1-alpine/.gitlab-ci.yml'
   - '1.2-alpine/.gitlab-ci.yml'
   - '1.3-alpine/.gitlab-ci.yml'
+  - '1.4-alpine/.gitlab-ci.yml'
 
 # after_success:
 # # notify Docker Hub to make a new build
