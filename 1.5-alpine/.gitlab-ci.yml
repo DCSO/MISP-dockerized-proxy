@@ -1,0 +1,12 @@
+build 1.5-alpine:
+  extends: .build
+  variables:
+    VERSION: "1.5-alpine"
+
+test 1.5-alpine:
+  extends: .test
+  variables:
+    VERSION: "1.5-alpine"
+  only:
+    changes:
+    - 1.5-alpine/*
