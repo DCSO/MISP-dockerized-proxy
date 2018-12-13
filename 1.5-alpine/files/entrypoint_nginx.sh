@@ -34,7 +34,19 @@ function SSL_generate_cert(){
 }
 
 function SSL_generate_DH(){
-    [ ! -f $SSL_DH_FILE ] && echo "Create DH params - This can take a long time, so take a break and enjoy a cup of tea or coffee." && openssl dhparam -out $SSL_DH_FILE 2048
+    # If a valid SSL certificate is not already created for the server, create a self-signed certificate:
+    i=0
+    while [ -f $PID_CERT_CREATER.server ]
+    do
+        echo "`date +%T` -  misp-server container create currently the certificate. misp-proxy until misp-server is finish."
+        # added to escape a deadlock from proxy 1.4-alpine with misp server 2.4.97-2.4.99.
+        i=$((i+1))
+        sleep 2
+        [ "$i" -eq 30 ] && rm $PID_CERT_CREATER.server
+        # END added to escape a deadlock from proxy 1.4-alpine with misp server 2.4.97-2.4.99.
+    done
+    
+    [ ! -f $SSL_DH_FILE ] && touch $PID_CERT_CREATER.proxy && echo "Create DH params - This can take a long time, so take a break and enjoy a cup of tea or coffee." && openssl dhparam -out $SSL_DH_FILE 2048 && rm $PID_CERT_CREATER.proxy
     echo # add an echo command because if no command is done busybox (alpine sh) won't continue the script
 }
 
