@@ -183,17 +183,17 @@ function upgrade(){
 
 #####################   MAIN    ###################
 # generate vars_common
-file_vars_common
+echo "$STARTMSG Create variables file..." && file_vars_common
 # generate global_allow_IPs
-file_GLOBAL_allow_IPs "$IP"
+echo "$STARTMSG Create file for IP restrictions..." && file_GLOBAL_allow_IPs "$IP"
 # check if ssl cert is required to generate
-SSL_generate_cert
+echo "$STARTMSG Check if cert is required..." && SSL_generate_cert
 # check if DH file is required to generate
-SSL_generate_DH
+echo "$STARTMSG Check if DH is required..." && SSL_generate_DH
 # create maintenance file
-file_maintenance_html
+echo "$STARTMSG Create maintenance file..." && file_maintenance_html
 # check volumes and upgrade if it is required
-echo "$STARTMSG upgrade if it is required..." && upgrade
+echo "$STARTMSG check if upgrade is required..." && upgrade
 
 # activate maintenance
 [ "$1" == "enable-maintenance" ] && enable_maintenance
