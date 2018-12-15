@@ -30,7 +30,7 @@ unset IFS
 LATEST=$(echo ${sorted[$index-1]}|cut -d- -f 1)
 
 # All Latest Major Versions
-MAJOR_LATEST
+MAJOR_LATEST=""
 # Run over all FOLDER versions and add all first digit numbers
 for i in ${sorted[@]}
 do

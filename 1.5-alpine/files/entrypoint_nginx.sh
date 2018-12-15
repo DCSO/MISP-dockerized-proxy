@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+STARTMSG="[ENTRYPOINT_APACHE]"
+
 SSL_DH_FILE="/etc/nginx/ssl/dhparams.pem"
 SSL_KEY="/etc/nginx/ssl/key.pem"
 SSL_CERT="/etc/nginx/ssl/cert.pem"
@@ -20,7 +22,7 @@ function SSL_generate_cert(){
     i=0
     while [ -f $PID_CERT_CREATER.server ]
     do
-        echo "`date +%T` -  misp-server container create currently the certificate. misp-proxy until misp-server is finish."
+        echo "$STARTMSG `date +%T` -  misp-server container create currently the certificate. misp-proxy until misp-server is finish."
         # added to escape a deadlock from proxy 1.4-alpine with misp server 2.4.97-2.4.99.
         i=$((i+1))
         sleep 2
@@ -28,13 +30,25 @@ function SSL_generate_cert(){
         # END added to escape a deadlock from proxy 1.4-alpine with misp server 2.4.97-2.4.99.
     done
     
-    [ ! -f $SSL_CERT -a ! -f $SSL_KEY ] && touch $PID_CERT_CREATER.proxy && echo "Create SSL Certificate..." && openssl req -x509 -newkey rsa:4096 -keyout $SSL_KEY -out $SSL_CERT -days 365 -sha256 -subj '/CN='${HOSTNAME} -nodes && echo "finished." && rm $PID_CERT_CREATER.proxy
+    [ ! -f $SSL_CERT -a ! -f $SSL_KEY ] && touch $PID_CERT_CREATER.proxy && echo "$STARTMSG Create SSL Certificate..." && openssl req -x509 -newkey rsa:4096 -keyout $SSL_KEY -out $SSL_CERT -days 365 -sha256 -subj '/CN='${HOSTNAME} -nodes && rm $PID_CERT_CREATER.proxy
     
     echo # add an echo command because if no command is done busybox (alpine sh) won't continue the script
 }
 
 function SSL_generate_DH(){
-    [ ! -f $SSL_DH_FILE ] && echo "Create DH params - This can take a long time, so take a break and enjoy a cup of tea or coffee." && openssl dhparam -out $SSL_DH_FILE 2048
+    # If a valid SSL certificate is not already created for the server, create a self-signed certificate:
+    i=0
+    while [ -f $PID_CERT_CREATER.server ]
+    do
+        echo "$STARTMSG `date +%T` -  misp-server container create currently the certificate. misp-proxy until misp-server is finish."
+        # added to escape a deadlock from proxy 1.4-alpine with misp server 2.4.97-2.4.99.
+        i=$((i+1))
+        sleep 2
+        [ "$i" -eq 30 ] && rm $PID_CERT_CREATER.server
+        # END added to escape a deadlock from proxy 1.4-alpine with misp server 2.4.97-2.4.99.
+    done
+    
+    [ ! -f $SSL_DH_FILE ] && touch $PID_CERT_CREATER.proxy && echo "$STARTMSG Create DH params - This can take a long time, so take a break and enjoy a cup of tea or coffee." && openssl dhparam -out $SSL_DH_FILE 2048 && rm $PID_CERT_CREATER.proxy
     echo # add an echo command because if no command is done busybox (alpine sh) won't continue the script
 }
 
@@ -90,7 +104,7 @@ echo # add an echo command because if no command is done busybox (alpine sh) won
 
 function file_maintenance_html(){
 
-[ ! -d $MAINTENANCE_HTML_PATH ] && echo "mkdir -p $MAINTENANCE_HTML_PATH" && mkdir -p $MAINTENANCE_HTML_PATH; # Add directory for maintenance File + Copy Maintenance config
+[ ! -d $MAINTENANCE_HTML_PATH ] && echo "$STARTMSG mkdir -p $MAINTENANCE_HTML_PATH" && mkdir -p $MAINTENANCE_HTML_PATH; # Add directory for maintenance File + Copy Maintenance config
 
 cat << EOF > $MAINTENANCE_HTML_FILE
 <!doctype html>
@@ -118,16 +132,16 @@ echo
 
 function enable_maintenance(){
     # deactivate https
-    [ -f $HTTPS_CONFIG.conf ] && echo "mv $HTTPS_CONFIG.conf $HTTPS_CONFIG" && mv $HTTPS_CONFIG.conf $HTTPS_CONFIG
-    [ -f $MAINTENANCE ] && echo "mv $MAINTENANCE $MAINTENANCE.conf" && mv $MAINTENANCE $MAINTENANCE.conf
+    [ -f $HTTPS_CONFIG.conf ] && echo "$STARTMSG mv $HTTPS_CONFIG.conf $HTTPS_CONFIG" && mv $HTTPS_CONFIG.conf $HTTPS_CONFIG
+    [ -f $MAINTENANCE ] && echo "$STARTMSG mv $MAINTENANCE $MAINTENANCE.conf" && mv $MAINTENANCE $MAINTENANCE.conf
     nginx -t
     echo # add an echo command because if no command is done busybox (alpine sh) won't continue the script
     exit
 }
 
 function disable_maintenance(){
-    [ -f $HTTPS_CONFIG ] && mv $HTTPS_CONFIG $HTTPS_CONFIG.conf
-    [ -f $MAINTENANCE.conf ] && mv $MAINTENANCE.conf $MAINTENANCE
+    [ -f $HTTPS_CONFIG ] && echo "$STARTMSG mv $HTTPS_CONFIG $HTTPS_CONFIG.conf" && mv $HTTPS_CONFIG $HTTPS_CONFIG.conf
+    [ -f $MAINTENANCE.conf ] && echo "$STARTMSG mv $MAINTENANCE.conf $MAINTENANCE" && mv $MAINTENANCE.conf $MAINTENANCE
     nginx -t
     echo # add an echo command because if no command is done busybox (alpine sh) won't continue the script
     exit
@@ -150,14 +164,14 @@ function upgrade(){
             echo "Folder $i is on the newest version."
         else
             # upgrade
-            echo "Folder $i should be updated."
+            echo "$STARTMSG Folder $i should be updated."
             case $(echo $i/$NAME) in
             1.4)
                 # Tasks todo in 2.4.92
-                echo "#### Upgrade Volumes from 2.4.92 ####"
+                echo $STARTMSG "#### Upgrade Volumes from 2.4.92 ####"
                 ;;
             *)
-                echo "Unknown Version, upgrade not possible."
+                echo "$STARTMSG Unknown Version, upgrade not possible."
                 exit
                 ;;
             esac
@@ -169,17 +183,17 @@ function upgrade(){
 
 #####################   MAIN    ###################
 # generate vars_common
-file_vars_common
+echo "$STARTMSG Create variables file..." && file_vars_common
 # generate global_allow_IPs
-file_GLOBAL_allow_IPs "$IP"
+echo "$STARTMSG Create file for IP restrictions..." && file_GLOBAL_allow_IPs "$IP"
 # check if ssl cert is required to generate
-SSL_generate_cert
+echo "$STARTMSG Check if cert is required..." && SSL_generate_cert
 # check if DH file is required to generate
-SSL_generate_DH
+echo "$STARTMSG Check if DH is required..." && SSL_generate_DH
 # create maintenance file
-file_maintenance_html
+echo "$STARTMSG Create maintenance file..." && file_maintenance_html
 # check volumes and upgrade if it is required
-echo "upgrade if it is required..." && upgrade
+echo "$STARTMSG check if upgrade is required..." && upgrade
 
 # activate maintenance
 [ "$1" == "enable-maintenance" ] && enable_maintenance
