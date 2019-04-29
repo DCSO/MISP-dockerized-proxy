@@ -1,3 +1,4 @@
+language: minimal
 sudo: required
 services: docker
 
@@ -10,16 +11,16 @@ env:
   # Docker Hub Token
   - secure: "sdFi0tLdkDKhJyUR57RAQUve3+FZZajU7amBAQJVKQpG4ou3HyA2eAytIal1vAIW1x0klD6vu2BSyOSfLA04i5qSjX/KfmT6gQ6PDK6ZhjCAJ1rAUyZnRsCvy9DHzID27LMcHcssdbkSeqhCdLXch18OZhkk2IsvBA7gtHIAu7HKxkYvoOYEpvh4GAaaxXKyKkJHusVkJilZWbamJjICZaLTLPxwUhW3345H3yeO5ZXwxnWA+KzgR9OlFINpTst6bCTLXzBL8MgzLZasNVBPUl+xDqx403nuqbrWcqJdkpaw6ftv4h1EqJW571eE3P+Zv+FbibfKUdsXybtGWMUkJFOK0ntZf0A5du6NkQ9W4o58krv2VQtyTGXmETnhRamt5p+bKQZikKBE0JR2uN5C7X6UbqRWtd5CBc3cqSnWJJpxhzNWz6gisDBmMp07K/UanoYcPPS9UUumuSPHUJv8WVhdFv7fAxW6rrwIYSA0rqwiZrOkU9Aug5+v/goJSpAE+YtdJnoDn+nkw4r7Qv9Aul+AbF7l+9WQIUT1Y34VOIxEjpABfw6ocGOlcLhJPSdZWIYZctvevKymZ2QpMdrrtRITVhXB7yl4I2oIQwzGOUakdjuOf1hwQNGf5TcKLr4edeCYe1W6J1N2f1gmrf3Tj28HT8TfTqtS6jIL7K+5onI="
   matrix:
-  - VERSION=1.0-alpine
-  - VERSION=1.1-alpine
-  - VERSION=1.2-alpine
-  - VERSION=1.3-alpine
-  - VERSION=1.4-alpine
+  #- VERSION=1.0-alpine
+  #- VERSION=1.1-alpine
+  # - VERSION=1.2-alpine
+  # - VERSION=1.3-alpine
+  # - VERSION=1.4-alpine
   - VERSION=1.5-alpine
   # legacy
-  - VERSION=1.0.0-alpine
-  - VERSION=1.0.1-alpine
-  - VERSION=1.0.2-alpine
+  #- VERSION=1.0.0-alpine
+  #- VERSION=1.0.1-alpine
+  #- VERSION=1.0.2-alpine
   
   
 before_install:
