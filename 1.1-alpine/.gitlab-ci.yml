@@ -2,3 +2,13 @@ build 1.1-alpine:
   extends: .build
   variables:
     VERSION: "1.1-alpine"
+    TAGS: "${VERSION}-dev 1.0.1-alpine-dev"
+    RELEASE_DATE: 2018-11
+
+test 1.1-alpine:
+  extends: .test
+  variables:
+    VERSION: "1.1-alpine"
+  only:
+    changes:
+    - 1.1-alpine/*
