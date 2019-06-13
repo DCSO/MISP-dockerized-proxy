@@ -2,20 +2,27 @@
 set -eu
 
 # Variables
-STARTMSG="[ENTRYPOINT_APACHE]"
-
+NC='\033[0m' # No Color
+Light_Green='\033[1;32m'  
+STARTMSG="${Light_Green}[ENTRYPOINT_PROXY]${NC}"
 SSL_DH_FILE="/etc/nginx/ssl/dhparams.pem"
 SSL_KEY="/etc/nginx/ssl/key.pem"
 SSL_CERT="/etc/nginx/ssl/cert.pem"
+SSL_PASSPHRASE_FILE="/etc/nginx/ssl/ssl.passphrase"
 VARS_COMMON="/etc/nginx/conf.d/vars_common"
 GLOBAL_allow_IPs="/etc/nginx/conf.d/GLOBAL_allow_IPs"
 HTTPS_CONFIG="/etc/nginx/conf.d/SERVER_HTTPS_and_redirected_HTTP"
 HTTP_CONFIG="/etc/nginx/conf.d/SERVER_HTTP_only"
-MAINTENANCE="/etc/nginx/conf.d/SERVER_MAINTENANCE"
+MAINTENANCE_CONFIG="/etc/nginx/conf.d/SERVER_MAINTENANCE"
 STATUS_CONFIG_FILE="/etc/nginx/conf.d/status.conf"
 PID_CERT_CREATER="/etc/nginx/ssl/SSL_create.pid"
 MAINTENANCE_HTML_PATH="/var/www/maintenance"
 MAINTENANCE_HTML_FILE="$MAINTENANCE_HTML_PATH/index.html"
+
+# Functions
+echo (){
+    command echo -e "$STARTMSG $*"
+}
 
 
 # Environment
@@ -28,15 +35,15 @@ PROXY_QUESTION_USE_IP_RESTRICTION=${PROXY_QUESTION_USE_IP_RESTRICTION:-"yes"}
 PROXY_CLIENT_MAX_BODY_SIZE=${PROXY_CLIENT_MAX_BODY_SIZE:-"50M"}
 PROXY_BASIC_AUTH_USER=${PROXY_BASIC_AUTH_USER:-}
 PROXY_BASIC_AUTH_PASSWORD=${PROXY_BASIC_AUTH_PASSWORD:-}
-
+SSL_PASSPHRASE=${SSL_PASSPHRASE:-}
 
 #Functions
-SSL_generate_cert(){
+ssl_generate_cert(){
     # If a valid SSL certificate is not already created for the server, create a self-signed certificate:
     i=0
     while [ -f "$PID_CERT_CREATER.server" ]
     do
-        echo "$STARTMSG `date +%T` -  misp-server container create currently the certificate. misp-proxy until misp-server is finish."
+        echo "$(date +%T) -  misp-server container create currently the certificate. misp-proxy until misp-server is finish."
         # added to escape a deadlock from proxy 1.4-alpine with misp server 2.4.97-2.4.99.
         i=$((i+1))
         sleep 2
@@ -44,17 +51,17 @@ SSL_generate_cert(){
         # END added to escape a deadlock from proxy 1.4-alpine with misp server 2.4.97-2.4.99.
     done
     
-    ( [ ! -f "$SSL_CERT" ] && [ ! -f "$SSL_KEY" ] ) && touch "$PID_CERT_CREATER.proxy" && echo "$STARTMSG Create SSL Certificate..." && openssl req -x509 -newkey rsa:4096 -keyout $SSL_KEY -out $SSL_CERT -days 365 -sha256 -subj '/CN='${HOSTNAME} -nodes && rm $PID_CERT_CREATER.proxy --extfile openssl.cnf
+    ( [ ! -f "$SSL_CERT" ] && [ ! -f "$SSL_KEY" ] ) && touch "$PID_CERT_CREATER.proxy" && echo "Create SSL Certificate..." && openssl req -x509 -newkey rsa:4096 -keyout "$SSL_KEY" -out "$SSL_CERT" -days 365 -sha256 -subj "'/CN=${MISP_FQDN}'" -nodes && rm "$PID_CERT_CREATER.proxy" --extfile openssl.cnf
     
     echo # add an echo command because if no command is done busybox (alpine sh) won't continue the script
 }
 
-SSL_generate_DH(){
+ssl_generate_DH(){
     # If a valid SSL certificate is not already created for the server, create a self-signed certificate:
     i=0
     while [ -f "$PID_CERT_CREATER.server" ]
     do
-        echo "$STARTMSG `date +%T` -  misp-server container create currently the certificate. misp-proxy until misp-server is finish."
+        echo "$(date +%T) -  misp-server container create currently the certificate. misp-proxy until misp-server is finish."
         # added to escape a deadlock from proxy 1.4-alpine with misp server 2.4.97-2.4.99.
         i=$((i+1))
         sleep 2
@@ -62,8 +69,29 @@ SSL_generate_DH(){
         # END added to escape a deadlock from proxy 1.4-alpine with misp server 2.4.97-2.4.99.
     done
     
-    [ ! -f "$SSL_DH_FILE" ] && touch "$PID_CERT_CREATER.proxy" && echo "$STARTMSG Create DH params - This can take a long time, so take a break and enjoy a cup of tea or coffee." && openssl dhparam -out $SSL_DH_FILE 2048 && rm $PID_CERT_CREATER.proxy
+    [ ! -f "$SSL_DH_FILE" ] && touch "$PID_CERT_CREATER.proxy" && echo "Create DH params - This can take a long time, so take a break and enjoy a cup of tea or coffee." && openssl dhparam -out $SSL_DH_FILE 2048 && rm $PID_CERT_CREATER.proxy
     echo # add an echo command because if no command is done busybox (alpine sh) won't continue the script
+}
+
+ssl_add_passphrase_file() {
+    if [ "$SSL_PASSPHRASE_ENABLE" = "yes" ]
+    then
+        if [ -n "$SSL_PASSPHRASE" ] && [ ! -f "$SSL_PASSPHRASE_FILE" ]
+        then
+            echo "Copy environment variable into file..."
+            command echo "$SSL_PASSPHRASE" > "$SSL_PASSPHRASE_FILE"
+            echo "Copy environment variable into file...finished"
+        else
+            [ ! -f "$SSL_PASSPHRASE_FILE" ] && echo "No passphrase file found: $SSL_PASSPHRASE_FILE. I will try to start without passphrase." && return
+            [ -f "$SSL_PASSPHRASE_FILE" ] && echo "Passphrase file is found. We use it."
+        fi
+
+            # Activate configuration
+            sed -i "s,#ssl_password_file /etc/nginx/ssl/ssl.passphrase,ssl_password_file $SSL_PASSPHRASE_FILE/" "$HTTPS_CONFIG"
+            sed -i "s,#ssl_password_file /etc/nginx/ssl/ssl.passphrase,ssl_password_file $SSL_PASSPHRASE_FILE/" "$MAINTENANCE_CONFIG"
+    else
+        echo "... SSL passphrase mode is deactivated."
+    fi
 }
 
 deactivate_http_config(){
@@ -171,16 +199,16 @@ generate_basic_auth(){
 
 enable_maintenance(){
     # deactivate https
-    [ -f $HTTPS_CONFIG.conf ] && echo "$STARTMSG mv $HTTPS_CONFIG.conf $HTTPS_CONFIG" && mv $HTTPS_CONFIG.conf $HTTPS_CONFIG
-    [ -f $MAINTENANCE ] && echo "$STARTMSG mv $MAINTENANCE $MAINTENANCE.conf" && mv $MAINTENANCE $MAINTENANCE.conf
+    [ -f $HTTPS_CONFIG.conf ] && echo "mv $HTTPS_CONFIG.conf $HTTPS_CONFIG" && mv $HTTPS_CONFIG.conf $HTTPS_CONFIG
+    [ -f $MAINTENANCE_CONFIG ] && echo "mv $MAINTENANCE_CONFIG $MAINTENANCE_CONFIG.conf" && mv $MAINTENANCE_CONFIG $MAINTENANCE_CONFIG.conf
     nginx -t
     echo # add an echo command because if no command is done busybox (alpine sh) won't continue the script
     exit
 }
 
 disable_maintenance(){
-    [ -f $HTTPS_CONFIG ] && echo "$STARTMSG mv $HTTPS_CONFIG $HTTPS_CONFIG.conf" && mv $HTTPS_CONFIG $HTTPS_CONFIG.conf
-    [ -f $MAINTENANCE.conf ] && echo "$STARTMSG mv $MAINTENANCE.conf $MAINTENANCE" && mv $MAINTENANCE.conf $MAINTENANCE
+    [ -f $HTTPS_CONFIG ] && echo "mv $HTTPS_CONFIG $HTTPS_CONFIG.conf" && mv $HTTPS_CONFIG $HTTPS_CONFIG.conf
+    [ -f $MAINTENANCE_CONFIG.conf ] && echo "mv $MAINTENANCE_CONFIG.conf $MAINTENANCE_CONFIG" && mv $MAINTENANCE_CONFIG.conf $MAINTENANCE_CONFIG
     nginx -t
     echo # add an echo command because if no command is done busybox (alpine sh) won't continue the script
     exit
