@@ -13,10 +13,9 @@ include:
 #
 # For a cleaner Gitlab CI file include all subfolder which should be build:
 #
-  - '.legacy/.gitlab-ci.yml'
-  #- '1.0-alpine/.gitlab-ci.yml'
-  #- '1.1-alpine/.gitlab-ci.yml'
-  #- '1.2-alpine/.gitlab-ci.yml'
+  - '1.0-alpine/.gitlab-ci.yml'
+  - '1.1-alpine/.gitlab-ci.yml'
+  - '1.2-alpine/.gitlab-ci.yml'
   #- '1.3-alpine/.gitlab-ci.yml'
   #- '1.4-alpine/.gitlab-ci.yml'
   #- '1.5-alpine/.gitlab-ci.yml'
