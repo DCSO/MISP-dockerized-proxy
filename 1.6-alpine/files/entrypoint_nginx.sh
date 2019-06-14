@@ -90,6 +90,7 @@ ssl_passphrase() {
                 echo "... ... No passphrase file found: $SSL_PASSPHRASE_FILE"
                 echo "... ... Please add your file in config/ssl/"
                 echo "... ... For more information please go to: https://dcso.github.io/MISP-dockerized-docs/admin/ssl_passphrase.html"
+                echo "... ... Exit now."
                 exit 1
             fi
         fi
