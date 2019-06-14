@@ -205,7 +205,8 @@ EOF
 
 generate_basic_auth(){
     ( [ -z "$PROXY_BASIC_AUTH_USER" ] || [ -z "$PROXY_BASIC_AUTH_PASSWORD" ] ) && echo "Please set PROXY_BASIC_AUTH_PASSWORD and PROXY_BASIC_AUTH_USER environment variables." && exit 1
-    printf "%s:$(echo "$PROXY_BASIC_AUTH_PASSWORD"|openssl passwd -apr1 -stdin)" "$PROXY_BASIC_AUTH_USER" > /etc/nginx/passwords
+    # Create a new basic_auth password file (-c), with bcrypt algorithm (-B) and read the password form commandline (-b)
+    htpasswd -cBb /etc/nginx/passwords "$PROXY_BASIC_AUTH_USER" "$PROXY_BASIC_AUTH_PASSWORD"
 }
 
 enable_maintenance(){
