@@ -8,7 +8,6 @@ STARTMSG="${Light_Green}[ENTRYPOINT_PROXY]${NC}"
 SSL_DH_FILE="/etc/nginx/ssl/dhparams.pem"
 SSL_KEY="/etc/nginx/ssl/key.pem"
 SSL_CERT="/etc/nginx/ssl/cert.pem"
-SSL_PASSPHRASE_FILE="/etc/nginx/ssl/ssl.passphrase"
 VARS_COMMON="/etc/nginx/conf.d/vars_common"
 GLOBAL_allow_IPs="/etc/nginx/conf.d/GLOBAL_allow_IPs"
 HTTPS_CONFIG="/etc/nginx/conf.d/SERVER_HTTPS_and_redirected_HTTP"
@@ -18,6 +17,7 @@ STATUS_CONFIG_FILE="/etc/nginx/conf.d/status.conf"
 PID_CERT_CREATER="/etc/nginx/ssl/SSL_create.pid"
 MAINTENANCE_HTML_PATH="/var/www/maintenance"
 MAINTENANCE_HTML_FILE="$MAINTENANCE_HTML_PATH/index.html"
+SSL_PASSPHRASE_FILE="/etc/nginx/ssl/ssl.passphrase"
 
 # Functions
 echo (){
@@ -36,6 +36,7 @@ PROXY_CLIENT_MAX_BODY_SIZE=${PROXY_CLIENT_MAX_BODY_SIZE:-"50M"}
 PROXY_BASIC_AUTH_USER=${PROXY_BASIC_AUTH_USER:-}
 PROXY_BASIC_AUTH_PASSWORD=${PROXY_BASIC_AUTH_PASSWORD:-}
 SSL_PASSPHRASE=${SSL_PASSPHRASE:-}
+SSL_PASSPHRASE_ENABLE=${SSL_PASSPHRASE_ENABLE:-"no"}
 
 #Functions
 ssl_generate_cert(){
@@ -53,7 +54,7 @@ ssl_generate_cert(){
     
     ( [ ! -f "$SSL_CERT" ] && [ ! -f "$SSL_KEY" ] ) && touch "$PID_CERT_CREATER.proxy" && echo "Create SSL Certificate..." && openssl req -x509 -newkey rsa:4096 -keyout "$SSL_KEY" -out "$SSL_CERT" -days 365 -sha256 -subj "'/CN=${MISP_FQDN}'" -nodes && rm "$PID_CERT_CREATER.proxy" --extfile openssl.cnf
     
-    echo # add an echo command because if no command is done busybox (alpine sh) won't continue the script
+    echo "... ssl_generate_cert...finished"
 }
 
 ssl_generate_DH(){
@@ -70,25 +71,35 @@ ssl_generate_DH(){
     done
     
     [ ! -f "$SSL_DH_FILE" ] && touch "$PID_CERT_CREATER.proxy" && echo "Create DH params - This can take a long time, so take a break and enjoy a cup of tea or coffee." && openssl dhparam -out $SSL_DH_FILE 2048 && rm $PID_CERT_CREATER.proxy
-    echo # add an echo command because if no command is done busybox (alpine sh) won't continue the script
+    echo "... ssl_generate_DH...finished"
 }
 
-ssl_add_passphrase_file() {
+ssl_passphrase() {
     if [ "$SSL_PASSPHRASE_ENABLE" = "yes" ]
     then
-        if [ -n "$SSL_PASSPHRASE" ] && [ ! -f "$SSL_PASSPHRASE_FILE" ]
+        # Check if SSL_PASSPHRASE as environment variable exists, if not use file
+        if [ -n "$SSL_PASSPHRASE" ]
         then
-            echo "Copy environment variable into file..."
+            echo "... ... Copy environment variable into file..."
             command echo "$SSL_PASSPHRASE" > "$SSL_PASSPHRASE_FILE"
-            echo "Copy environment variable into file...finished"
+            echo "... ... Copy environment variable into file...finished"
         else
-            [ ! -f "$SSL_PASSPHRASE_FILE" ] && echo "No passphrase file found: $SSL_PASSPHRASE_FILE. I will try to start without passphrase." && return
-            [ -f "$SSL_PASSPHRASE_FILE" ] && echo "Passphrase file is found. We use it."
+            echo "... ... No Environment variable exists will try passphrase file..."
+            if [ ! -f "$SSL_PASSPHRASE_FILE" ] 
+            then 
+                echo "... ... No passphrase file found: $SSL_PASSPHRASE_FILE"
+                echo "... ... Please add your file in config/ssl/"
+                echo "... ... For more information please go to: https://dcso.github.io/MISP-dockerized-docs/admin/ssl_passphrase.html"
+                exit 1
+            fi
         fi
-
             # Activate configuration
-            sed -i "s,#ssl_password_file /etc/nginx/ssl/ssl.passphrase,ssl_password_file $SSL_PASSPHRASE_FILE/" "$HTTPS_CONFIG"
-            sed -i "s,#ssl_password_file /etc/nginx/ssl/ssl.passphrase,ssl_password_file $SSL_PASSPHRASE_FILE/" "$MAINTENANCE_CONFIG"
+            sed -i "s,.*#ssl_password_file.*,ssl_password_file ${SSL_PASSPHRASE_FILE};," "$HTTPS_CONFIG.conf"
+                # write in disabled maintenance config
+            [ -f "$MAINTENANCE_CONFIG" ] && sed -i "s,.*#ssl_password_file.*,ssl_password_file ${SSL_PASSPHRASE_FILE};," "$MAINTENANCE_CONFIG"
+                # write in enabled maintenance config
+            [ -f "$MAINTENANCE_CONFIG.conf" ] && sed -i "s,.*#ssl_password_file.*,ssl_password_file ${SSL_PASSPHRASE_FILE};," "$MAINTENANCE_CONFIG.conf"
+            echo "... ... Passphrase file mode enabled."
     else
         echo "... SSL passphrase mode is deactivated."
     fi
@@ -96,15 +107,15 @@ ssl_add_passphrase_file() {
 
 deactivate_http_config(){
     [ -f "$HTTP_CONFIG.conf" ] && echo "mv $HTTP_CONFIG.conf $HTTP_CONFIG" && mv "$HTTP_CONFIG.conf" "$HTTP_CONFIG"
-    echo # add an echo command because if no command is done busybox (alpine sh) won't continue the script
+    echo "... deactivate_http_config...finished"
 }
 
 activate_https_config() {
     [ -f "$HTTPS_CONFIG" ] && echo "mv $HTTPS_CONFIG $HTTPS_CONFIG.conf" && mv "$HTTPS_CONFIG" "$HTTPS_CONFIG.conf"
-    echo # add an echo command because if no command is done busybox (alpine sh) won't continue the script
+    echo "... activate_https_config...finished"
 }
 
-file_GLOBAL_allow_IPs(){
+file_global_allow_ips(){
 IP="$1"
 
 
@@ -126,7 +137,7 @@ EOF
     fi
 
     chmod 644 $GLOBAL_allow_IPs
-    echo # add an echo command because if no command is done busybox (alpine sh) won't continue the script
+    echo "... file_global_allow_ips...finished"
 }
 
 file_vars_common()
@@ -137,7 +148,7 @@ client_max_body_size $PROXY_CLIENT_MAX_BODY_SIZE;
 
 EOF
 chmod 644 $VARS_COMMON
-echo # add an echo command because if no command is done busybox (alpine sh) won't continue the script
+echo "... file_vars_common...finished"
 }
 
 file_maintenance_html(){
@@ -165,7 +176,7 @@ cat << EOF > $MAINTENANCE_HTML_FILE
 </article>
 
 EOF
-echo
+echo "... file_maintenance_html...finished"
 }
 
 
@@ -189,7 +200,7 @@ file_status_conf() {
     }
 
 EOF
-
+    echo "... file_status_conf...finished"
 }
 
 generate_basic_auth(){
@@ -202,7 +213,7 @@ enable_maintenance(){
     [ -f $HTTPS_CONFIG.conf ] && echo "mv $HTTPS_CONFIG.conf $HTTPS_CONFIG" && mv $HTTPS_CONFIG.conf $HTTPS_CONFIG
     [ -f $MAINTENANCE_CONFIG ] && echo "mv $MAINTENANCE_CONFIG $MAINTENANCE_CONFIG.conf" && mv $MAINTENANCE_CONFIG $MAINTENANCE_CONFIG.conf
     nginx -t
-    echo # add an echo command because if no command is done busybox (alpine sh) won't continue the script
+    echo "... enable_maintenance...finished"
     exit
 }
 
@@ -210,7 +221,7 @@ disable_maintenance(){
     [ -f $HTTPS_CONFIG ] && echo "mv $HTTPS_CONFIG $HTTPS_CONFIG.conf" && mv $HTTPS_CONFIG $HTTPS_CONFIG.conf
     [ -f $MAINTENANCE_CONFIG.conf ] && echo "mv $MAINTENANCE_CONFIG.conf $MAINTENANCE_CONFIG" && mv $MAINTENANCE_CONFIG.conf $MAINTENANCE_CONFIG
     nginx -t
-    echo # add an echo command because if no command is done busybox (alpine sh) won't continue the script
+    echo "... disable_maintenance...finished"
     exit
 }
 
@@ -222,11 +233,13 @@ disable_maintenance(){
 # generate vars_common
 echo "Create variables file..." && file_vars_common
 # generate global_allow_IPs
-echo "Create file for IP restrictions..." && file_GLOBAL_allow_IPs "$PROXY_IP_RESTRICTION"
+echo "Create file for IP restrictions..." && file_global_allow_ips "$PROXY_IP_RESTRICTION"
 # check if ssl cert is required to generate
-echo "Check if cert is required..." && SSL_generate_cert
+echo "Check if cert is required..." && ssl_generate_cert
 # check if DH file is required to generate
-echo "Check if DH is required..." && SSL_generate_DH
+echo "Check if DH is required..." && ssl_generate_DH
+# check if SSL passphrase file is required to generate
+echo "Check if SSL passphrase is required..." && ssl_passphrase
 # create maintenance file
 echo "Create maintenance file..." && file_maintenance_html
 # create status config for monitoring
@@ -235,10 +248,10 @@ echo "Create status config for monitoring..." && file_status_conf
 echo "Create Basic Auth File..." && generate_basic_auth
 
 # activate maintenance
-[ "${1-}" = "enable-maintenance" ] && enable_maintenance
+[ "${1-}" = "enable-maintenance" ] && echo "Enable Maintenante mode..." && enable_maintenance
 
 # deactivate maintenance
-[ "${1-}" = "disable-maintenance" ] && disable_maintenance
+[ "${1-}" = "disable-maintenance" ] && echo "Disable Maintenante mode..." && disable_maintenance
 
 
 # test nginx config
