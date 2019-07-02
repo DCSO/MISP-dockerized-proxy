@@ -7,32 +7,32 @@ addons:
 
 env:
   global:
-  # The following variables are setup via gitlab project group:
-  # - DOCKER_HUB_TOKEN
-  # - DOCKER_SLUG
-  # - DOCKER_USERNAME
-  # - DOCKER_PASSWORD
+  #- DOCKER_COMPOSE_VERSION=1.4.2
+  - COMPONENT=proxy
+
   matrix:
-  #- VERSION=1.0-alpine
-  #- VERSION=1.1-alpine
-  #- VERSION=1.2-alpine
-  #- VERSION=1.3-alpine
-  #- VERSION=1.4-alpine
-  - VERSION=1.5-alpine
+  #- FOLDER=1.0-alpine
+  #- FOLDER=1.1-alpine
+  #- FOLDER=1.2-alpine
+  - FOLDER=1.3-alpine
+  - FOLDER=1.4-alpine
+  - FOLDER=1.5-alpine
+  - FOLDER=1.6-alpine
   # legacy
-  - VERSION=1.0.0-alpine
-  - VERSION=1.0.1-alpine
-  - VERSION=1.0.2-alpine
-
-  
-
-before_install:
-- sudo .ci/01_before_install.sh
+  - FOLDER=1.0.0-alpine
+  - FOLDER=1.0.1-alpine
+  - FOLDER=1.0.2-alpine
 
 script:
-- make -C .ci build v=${VERSION} prod=false      # Set prod=true, if you want to build NO '-dev' tag
-- make -C .ci tags REPOURL=$DOCKER_SLUG prod=false  # Set prod=true, if you want tags NO '-dev' tag
+- docker build -f "$TRAVIS_BUILD_DIR/$FOLDER/Dockerfile" 
+                      --build-arg VCS_REF="$TRAVIS_COMMIT" 
+                      --build-arg VERSION="$FOLDER" 
+                      --build-arg GIT_REPO="https://github.com/$TRAVIS_REPO_SLUG" 
+                      --build-arg COMPONENT="$COMPONENT"
+                      --build-arg BUILD_DATE="$(date -u +"%Y-%m-%d")"
+                      "$TRAVIS_BUILD_DIR/$FOLDER"
 
+
+# don't notify me when things fail
 notifications:
-  # don't notify me when things fail
   email: false

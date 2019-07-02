@@ -1,0 +1,14 @@
+# HTTP / HTTPS Config for maintenance
+server {
+	listen 80;
+	listen 443 ssl http2;
+	include conf.d/vars_common;
+
+	# SSL Certificate and Key
+	ssl_certificate /etc/nginx/ssl/cert.pem;
+	ssl_certificate_key /etc/nginx/ssl/key.pem;
+	#ssl_password_file /etc/nginx/ssl/ssl.passphrase;
+
+	root /var/www/maintenance;	
+	index index.html;
+}

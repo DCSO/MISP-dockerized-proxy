@@ -20,6 +20,10 @@ proxy_set_header X-Forwarded-Proto $scheme;
 proxy_set_header Accept-Encoding "";
 proxy_set_header Connection "";
 
+proxy_buffering off;
+proxy_request_buffering off;
+proxy_intercept_errors on;
+
 # Determines whether SSL sessions can be reused when working with the proxied server. 
 # If the errors “SSL3_GET_FINISHED:digest check failed” appear in the logs, 
 # try disabling session reuse. Default:
@@ -40,3 +44,4 @@ proxy_read_timeout 300;
 # The value can contain variables.
 # If the always parameter is specified (1.7.5), the header field will be added regardless of the response code
 add_header Cache-Control "public, must-revalidate";
+
