@@ -1,14 +1,13 @@
-build 1.0-alpine:
-  extends: .build
-  variables:
+variables:
     VERSION: "1.0-alpine"
     TAGS: "${VERSION}-dev 1.0.0-alpine-dev"
     RELEASE_DATE: 2018-11
 
+build 1.0-alpine:
+  extends: .build
+  
 test 1.0-alpine:
   extends: .test
-  variables:
-    VERSION: "1.0-alpine"
   only:
     changes:
     - 1.0-alpine/*

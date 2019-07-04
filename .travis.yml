@@ -11,18 +11,14 @@ env:
   - COMPONENT=proxy
 
   matrix:
-  #- FOLDER=1.0-alpine
-  #- FOLDER=1.1-alpine
-  #- FOLDER=1.2-alpine
+  - FOLDER=1.0-alpine  # legacy
+  - FOLDER=1.1-alpine  # legacy
+  - FOLDER=1.2-alpine  # legacy
   - FOLDER=1.3-alpine
   - FOLDER=1.4-alpine
   - FOLDER=1.5-alpine
   - FOLDER=1.6-alpine
-  # legacy
-  - FOLDER=1.0.0-alpine
-  - FOLDER=1.0.1-alpine
-  - FOLDER=1.0.2-alpine
-
+  
 script:
 - docker build -f "$TRAVIS_BUILD_DIR/$FOLDER/Dockerfile" 
                       --build-arg VCS_REF="$TRAVIS_COMMIT" 
