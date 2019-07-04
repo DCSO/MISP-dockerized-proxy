@@ -1,15 +1,13 @@
+variables:
+  VERSION: "1.5-alpine"
+  TAGS: "${VERSION}-dev"
+  RELEASE_DATE: 2018-12
+
 build 1.5-alpine:
   extends: .build
-  variables:
-    VERSION: "1.5-alpine"
-    #DEBUG: "true"
-    TAGS: "${VERSION}-dev"
-    RELEASE_DATE: 2018-12
-
+  
 test 1.5-alpine:
   extends: .test
-  variables:
-    VERSION: "1.5-alpine"
   only:
     changes:
     - 1.5-alpine/*
