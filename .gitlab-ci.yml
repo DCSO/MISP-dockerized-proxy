@@ -6,6 +6,10 @@ notify:
 variables:
   COMPONENT: proxy
 
+.build:
+  only:
+  - Bug/MDD-223
+
 include:
   - project: 'MISP/helper-containers'
     ref: master
@@ -16,7 +20,7 @@ include:
   - '1.0-alpine/.gitlab-ci.yml'
   - '1.1-alpine/.gitlab-ci.yml'
   - '1.2-alpine/.gitlab-ci.yml'
-  #- '1.3-alpine/.gitlab-ci.yml'
-  #- '1.4-alpine/.gitlab-ci.yml'
-  #- '1.5-alpine/.gitlab-ci.yml'
+  - '1.3-alpine/.gitlab-ci.yml'
+  - '1.4-alpine/.gitlab-ci.yml'
+  - '1.5-alpine/.gitlab-ci.yml'
   - '1.6-alpine/.gitlab-ci.yml'
