@@ -209,7 +209,7 @@ EOF
 }
 
 generate_basic_auth(){
-    if ( [ -z "$PROXY_BASIC_AUTH_USER" ] || [ -z "$PROXY_BASIC_AUTH_PASSWORD" ] ); then
+    if [ -z "$PROXY_BASIC_AUTH_USER" ] || [ -z "$PROXY_BASIC_AUTH_PASSWORD" ] ; then
         echo "Please set PROXY_BASIC_AUTH_PASSWORD and PROXY_BASIC_AUTH_USER environment variables."
     else
         # Create a new basic_auth password file (-c), with bcrypt algorithm (-B) and read the password form commandline (-b)
