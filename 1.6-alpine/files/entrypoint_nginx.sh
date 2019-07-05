@@ -52,7 +52,7 @@ ssl_generate_cert(){
         # END added to escape a deadlock from proxy 1.4-alpine with misp server 2.4.97-2.4.99.
     done
     
-    ( [ ! -f "$SSL_CERT" ] && [ ! -f "$SSL_KEY" ] ) && touch "$PID_CERT_CREATER.proxy" && echo "Create SSL Certificate..." && openssl req -x509 -newkey rsa:4096 -keyout "$SSL_KEY" -out "$SSL_CERT" -days 365 -sha256 -subj "'/CN=${MISP_FQDN}'" -nodes && rm "$PID_CERT_CREATER.proxy" --extfile openssl.cnf
+    ( [ ! -f "$SSL_CERT" ] || [ ! -f "$SSL_KEY" ] ) && touch "$PID_CERT_CREATER.proxy" && echo "Create SSL Certificate..." && openssl req -x509 -newkey rsa:4096 -keyout "$SSL_KEY" -out "$SSL_CERT" -days 365 -sha256 -subj "/C=DE/CN=${MISP_FQDN}" -nodes && rm "$PID_CERT_CREATER.proxy" #--extfile openssl.cnf
     
     echo "... ssl_generate_cert...finished"
 }
