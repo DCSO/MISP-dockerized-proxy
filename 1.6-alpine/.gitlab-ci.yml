@@ -1,13 +1,19 @@
-variables:
-  VERSION: "1.6-alpine"
-  TAGS: "$VERSION-dev latest-dev 1-dev"
-  RELEASE_DATE: 2019-06
   
 build 1.6-alpine:
   extends: .build
+  variables:
+    FOLDER: "1.6-alpine"
+    VERSION: "$FOLDER"
+    TAGS: "$FOLDER-dev latest-dev 1-dev"
+    RELEASE_DATE: 2019-06
 
 test 1.6-alpine:
   extends: .test
+  variables:
+    FOLDER: "1.6-alpine"
+    VERSION: "$FOLDER"
+    TAGS: "$FOLDER-dev latest-dev 1-dev"
+    RELEASE_DATE: 2019-06
   only:
     changes:
     - 1.6-alpine/*
