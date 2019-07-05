@@ -209,12 +209,9 @@ EOF
 }
 
 generate_basic_auth(){
-    if [ -z "$PROXY_BASIC_AUTH_USER" ] || [ -z "$PROXY_BASIC_AUTH_PASSWORD" ] ; then
-        echo "Please set PROXY_BASIC_AUTH_PASSWORD and PROXY_BASIC_AUTH_USER environment variables."
-    else
-        # Create a new basic_auth password file (-c), with bcrypt algorithm (-B) and read the password form commandline (-b)
-        htpasswd -cBb /etc/nginx/passwords "$PROXY_BASIC_AUTH_USER" "$PROXY_BASIC_AUTH_PASSWORD"
-    fi
+    [ -z "$PROXY_BASIC_AUTH_USER" ] || [ -z "$PROXY_BASIC_AUTH_PASSWORD" ] && echo "Please set PROXY_BASIC_AUTH_PASSWORD and PROXY_BASIC_AUTH_USER environment variables." && exit 1
+    # Create a new basic_auth password file (-c), with bcrypt algorithm (-B) and read the password form commandline (-b)
+    htpasswd -cBb /etc/nginx/passwords "$PROXY_BASIC_AUTH_USER" "$PROXY_BASIC_AUTH_PASSWORD"
 }
 
 enable_maintenance(){
