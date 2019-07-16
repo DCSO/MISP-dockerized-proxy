@@ -7,7 +7,8 @@ variables:
   COMPONENT: proxy
 
   .build:
-    - Bug/MDD-224
+    only:
+      - Bug/MDD-224
 
 include:
   - project: 'MISP/helper-containers'
