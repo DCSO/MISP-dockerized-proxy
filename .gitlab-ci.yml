@@ -6,9 +6,9 @@ notify:
 variables:
   COMPONENT: proxy
 
-  .build:
-    only:
-      - Bug/MDD-224
+.build:
+  only:
+  - Bug/MDD-224
 
 include:
   - project: 'MISP/helper-containers'
