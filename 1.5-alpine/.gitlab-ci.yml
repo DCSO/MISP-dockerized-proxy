@@ -1,13 +1,19 @@
-variables:
-  VERSION: "1.5-alpine"
-  TAGS: "${VERSION}-dev"
-  RELEASE_DATE: 2018-12
 
 build 1.5-alpine:
   extends: .build
+  variables:
+    FOLDER: "1.5-alpine"
+    VERSION: "$FOLDER"
+    TAGS: "${FOLDER}-dev 1-dev"
+    RELEASE_DATE: 2018-12
   
 test 1.5-alpine:
   extends: .test
+  variables:
+    FOLDER: "1.5-alpine"
+    VERSION: "$FOLDER"
+    TAGS: "${FOLDER}-dev"
+    RELEASE_DATE: 2018-12
   only:
     changes:
     - 1.5-alpine/*
