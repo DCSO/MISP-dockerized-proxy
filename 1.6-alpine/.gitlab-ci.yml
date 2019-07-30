@@ -1,0 +1,19 @@
+
+build 1.6-alpine:
+  extends: .build
+  variables:
+    FOLDER: "1.6-alpine"
+    VERSION: "$FOLDER"
+    TAGS: "${FOLDER}-dev 1-dev"
+    RELEASE_DATE: 2019-07
+  
+test 1.6-alpine:
+  extends: .test
+  variables:
+    FOLDER: "1.6-alpine"
+    VERSION: "$FOLDER"
+    TAGS: "${FOLDER}-dev"
+    RELEASE_DATE: 2019-07
+  only:
+    changes:
+    - 1.6-alpine/*
