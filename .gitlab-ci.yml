@@ -6,6 +6,9 @@ notify:
 variables:
   COMPONENT: proxy
 
+.build:
+  when: manual
+
 include:
   - project: 'MISP/helper-containers'
     ref: master
