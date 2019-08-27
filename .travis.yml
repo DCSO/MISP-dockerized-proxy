@@ -7,7 +7,6 @@ addons:
 
 env:
   global:
-  #- DOCKER_COMPOSE_VERSION=1.4.2
   - COMPONENT=proxy
 
   matrix:
@@ -17,18 +16,46 @@ env:
   - FOLDER=1.3-alpine
   - FOLDER=1.4-alpine
   - FOLDER=1.5-alpine
-  - FOLDER=2.0-alpine
+  - FOLDER=1.6-alpine ADD_TAG="1-dev"
+  - FOLDER=2.0-alpine ADD_TAG="2-dev latest-dev"
   
+
+before_install:
+# Pull Kaniko Image
+- docker pull gcr.io/kaniko-project/executor:latest
+# Login to hub.docker.com
+- echo "$DOCKER_PASS" | docker login -u $DOCKER_USER --password-stdin
+
+install:
+# Add docker-retag executable
+- wget -q https://github.com/joshdk/docker-retag/releases/download/0.0.2/docker-retag && chmod +x docker-retag
+
 script:
-- docker build -f "$TRAVIS_BUILD_DIR/$FOLDER/Dockerfile" 
-                      --build-arg VCS_REF="$TRAVIS_COMMIT" 
-                      --build-arg VERSION="$FOLDER" 
-                      --build-arg GIT_REPO="https://github.com/$TRAVIS_REPO_SLUG" 
-                      --build-arg COMPONENT="$COMPONENT"
-                      --build-arg BUILD_DATE="$(date -u +"%Y-%m-%d")"
-                      "$TRAVIS_BUILD_DIR/$FOLDER"
+# Build Image via kaniko
+- docker run
+    -v "$TRAVIS_BUILD_DIR/$FOLDER":/workspace
+    -v $HOME/.docker:/kaniko/.docker
+  gcr.io/kaniko-project/executor:latest
+    --context=/workspace
+    --build-arg VCS_REF=$TRAVIS_COMMIT
+    --build-arg VERSION=$FOLDER
+    --build-arg GIT_REPO=https://github.com/$TRAVIS_REPO_SLUG
+    --build-arg COMPONENT=$COMPONENT
+    --build-arg BUILD_DATE=$(date -u +"%Y-%m-%d")
+    --verbosity=info
+    --destination=$DOCKER_SLUG/misp-dockerized-$COMPONENT:$FOLDER
+
+# Retag images for other tags
+- for i in $ADD_TAG;
+  do
+    ./docker-retag $DOCKER_SLUG/misp-dockerized-$COMPONENT:$FOLDER $i;
+  done
+
+# # don't notify me when things fail
+# notifications:
+#   email: false
 
 
-# don't notify me when things fail
-notifications:
-  email: false
+# # don't notify me when things fail
+# notifications:
+#   email: false
